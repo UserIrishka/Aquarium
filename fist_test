@@ -48,17 +48,17 @@ int main()
         Time dt = clock.restart();
         if (!fishActive)
         {
-            //как быстро двигаются пузыри
+            //как быстро двигаются рыбы
             srand((int)time(0));
             fishSpeed = (rand() % 200) + 200;//от 200 до 399
 
-            //Насколько высоко пузыри 
+            //Насколько высоко рыбы
             srand((int)time(0) * 10);
             float height = (rand() % 500) + 500;//от 500 до 999
             spriteFish.setPosition(2000, height);//положение пузырей на 200 по оси Х и на любую высоту по оси У
             fishActive = true;
         }
-        else // переместить пузыри
+        else // переместить рыбу
         {
             spriteFish.setPosition(spriteFish.getPosition().x -(fishSpeed * dt.asSeconds()),
                 spriteFish.getPosition().y);

@@ -1,0 +1,81 @@
+#include <SFML/Graphics.hpp>
+using namespace sf;
+
+int main()
+{
+    RenderWindow window(sf::VideoMode(1200, 849), "SFML works!");//sf-пространство имен SFML//window-объект окна с параметрами (VideoMode - размер окна, заголовок окна, доп можно Style::Fullscreen - на полный экран)
+    //создание текстуры (использовать объект textureBackground для загрузки графики из нашей графической папки)
+    Texture textureBackground;
+    //Загрузка графики в текстуру
+    textureBackground.loadFromFile("graphics/aquarium.png");
+    //Создание спрайта
+    Sprite spriteBackground;
+    //Прикрепите текстуру к спрайту
+    spriteBackground.setTexture(textureBackground);
+    //расположить объект spriteBackground в объекте window по координатам 0,0
+    spriteBackground.setPosition(0, 0);
+
+    //водоросли
+    Texture textureSeaweed;
+    textureSeaweed.loadFromFile("graphics/m_Seaweed.png");
+    Sprite spriteSeaweed;
+    spriteSeaweed.setTexture(textureSeaweed);
+    spriteSeaweed.setPosition(0, 449);
+    //двигается?
+    bool seaweedActive = false;
+    //как быстро передвигается(пиксель в секунду)
+    float seaweedSpeed = 0.0f;
+
+    //рыба
+    Texture textureFish;
+    textureFish.loadFromFile("graphics/fish.png");
+    Sprite spriteFish;
+    spriteFish.setTexture(textureFish);
+    spriteFish.setPosition(900, 300);
+    bool fishActive = false;
+    float fishSpeed = 0.0f;
+    //Переменные для управления самим временем
+    Clock clock;
+
+    while (window.isOpen())
+    {
+        if (Keyboard::isKeyPressed(Keyboard::Escape))//если нажали на esc, то объект закрывается
+        {
+            window.close();
+        }
+        //изменение времени (перезапускает часы, чтобы мы могли замерять, сколько времени занимает каждый кадр)
+        //dt - delta time
+        Time dt = clock.restart();
+        if (!fishActive)
+        {
+            //как быстро двигаются пузыри
+            srand((int)time(0));
+            fishSpeed = (rand() % 200) + 200;//от 200 до 399
+
+            //Насколько высоко пузыри 
+            srand((int)time(0) * 10);
+            float height = (rand() % 500) + 500;//от 500 до 999
+            spriteFish.setPosition(2000, height);//положение пузырей на 200 по оси Х и на любую высоту по оси У
+            fishActive = true;
+        }
+        else // переместить пузыри
+        {
+            spriteFish.setPosition(spriteFish.getPosition().x -(fishSpeed * dt.asSeconds()),
+                spriteFish.getPosition().y);
+            // достигла ли девого края
+            if (spriteFish.getPosition().x < -100)
+            {
+                // Set it up ready to be a whole new bee next frame
+                fishActive = false;
+            }
+           
+        }
+        window.clear();//очистка дисплея
+        window.draw(spriteBackground);//Нарисуйте здесь нашу игровую сцену
+        window.draw(spriteSeaweed);
+        window.draw(spriteFish);
+        window.display();//переключается с ранее отображаемой поверхности на вновь обновленную
+    }
+
+    return 0;
+}
